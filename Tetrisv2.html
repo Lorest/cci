@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tetris</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		.bloc {
+			border: 1px solid grey;
+			width: 18px;
+			height: 18px;
+			float: left;
+		}
+
+		.blocact {
+			background-color: black;
+			width: 20px;
+			height: 20px;
+			
+		}
+
+		.blocsol {
+			background-color: black;
+			width: 20px;
+			height: 20px;
+		}
+
+		.green {
+			background-color: green;
+		}
+		.yellow {
+			background-color: yellow;
+		}
+		.red {
+			background-color: red;
+		}
+		.blue {
+			background-color: blue;
+		}
+		.purple {
+			background-color: purple;
+		}
+
+		tr {
+			padding: 0;
+		}
+
+		td {
+			padding: 0;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+
+
+
+	</style>
+</head>
+<body>
+	<table id="grille"></table>
+</body>
+<script>
+	var largeur = 15; //Largeur de la grille
+	var hauteur = 30; //Hauteur de la grille
+
+
+	
+
+	function getRandomInt(min, max) { //Nombre entier aléatoire entre min et max-1
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	function couleur_rand() {
+		var rand = getRandomInt(0,5);
+		if (rand == 0) {
+			return 'blue';
+		}
+		if (rand == 1) {
+			return 'red';
+		}
+		if (rand == 2) {
+			return 'yellow';
+		}
+		if (rand == 3) {
+			return 'green';
+		}
+		if (rand == 4) {
+			return 'purple';
+		}
+	}
+
+	function crea_bloc() { // Crée un bloc de manière aléatoire sur la premiere ligne
+		var position = getRandomInt(2,largeur+1);
+		var bloc_crea = document.getElementById('bloc_'+position);
+		var color = couleur_rand();
+
+		bloc_crea.setAttribute('class', 'blocact');
+		// bloc_crea.setAttribute("style", "background-color: "+color+";");
+		
+		// bloc_crea.setAttribute("style", "background-color: "+color+";");
+
+	}
+
+	// function isBlocActive(element) {
+
+	// }
+
+	function controle_sol (list_el) {
+		for (i=0; i < list_el.length; i++ ) {
+
+		var bloc_tested = 0;
+		var id = add_to_last((list_el[i].getAttribute('id')), 15);
+
+			if (document.getElementById(id)) {
+				bloc_tested = document.getElementById(id);
+				if (bloc_tested.getAttribute('class') == 'blocsol') {
+					for (j=0; j < list_el.length; j++ ) {
+						list_el[j].setAttribute('class', 'blocsol');
+					}
+					return true;
+				}	
+			}
+
+				if (bloc_tested == 0) {
+					for (j=0; j < list_el.length; j++ ) {
+						list_el[j].setAttribute('class', 'blocsol');
+					}
+					
+					return true;
+				}
+
+					
+		
+		
+		}
+		return false;
+	}
+
+
+	function bloc_du_bas (tab) {
+		var id_suiv = 0;
+		var id_cour = 0;
+		var bloc_suiv = 0;
+
+		for ( i = 0; i < tab.length; i++) {
+
+
+
+			id_cour = tab[0].getAttribute('id');
+			id_suiv = add_to_last(id_cour, 15);
+			
+			
+			bloc_suiv = document.getElementById(id_suiv);
+			// bloc_suiv.setAttribute("style", tab[1].getAttribute('style'));
+			// console.log(tab[1].getAttribute('style'));
+			bloc_suiv.setAttribute('class', 'blocact');
+			
+			tab[0].setAttribute('class', 'bloc');
+			// tab[0].setAttribute('style','');
+
+
+		}
+	}
+
+	function bloc_a_gauche (tab) {
+		var id_suiv = 0;
+		var id_cour = 0;
+		var bloc_suiv = 0;
+
+
+			var el = tab[0];
+			id_cour = el.getAttribute('id');
+			id_suiv = add_to_last(id_cour, (-1));
+			console.log(id_suiv);
+			
+			
+			bloc_suiv = document.getElementById(id_suiv);
+			console.log(bloc_suiv);
+			// bloc_suiv.setAttribute("style", tab[1].getAttribute('style'));
+			bloc_suiv.setAttribute('class', 'blocact');
+			
+			el.setAttribute('class', 'bloc');
+			el.setAttribute('style','');	
+	}
+
+	function bloc_a_droite (tab) {
+		var id_suiv = 0;
+		var id_cour = 0;
+		var bloc_suiv = 0;
+
+
+			var el = tab[0];
+			id_cour = el.getAttribute('id');
+			id_suiv = add_to_last(id_cour, (1));
+			console.log(id_suiv);
+			
+			
+			bloc_suiv = document.getElementById(id_suiv);
+			console.log(bloc_suiv);
+			// bloc_suiv.setAttribute("style", tab[1].getAttribute('style'));
+			bloc_suiv.setAttribute('class', 'blocact');
+			
+			el.setAttribute('class', 'bloc');
+			el.setAttribute('style','');	
+	}
+
+
+	function add_to_last(chaine, add) { //Ajoute add à la dernier partie d'une chaine de caractère séparer par des '_'
+		var tab = chaine.split('_');
+
+		tab[(tab.length-1)]=parseInt(tab[(tab.length-1)])+parseInt(add);
+
+		return tab.join('_');
+		
+
+	}
+
+	window.onload = function() {
+		var vitesse = 100;
+		j=0;
+		var grille_el = document.getElementById('grille');
+		for (i=0; i < 30; i++) {
+			grille_el.innerHTML+="<tr id='ligne"+i+"'</tr>";
+			for (j=1; j <= 15; j++) {
+				document.getElementById('ligne'+i).innerHTML+="<td><div class='bloc' id='bloc_"+(j+(i*15))+"'></div></td>";    
+			}
+		}
+
+		crea_bloc();
+
+		var actives = [];
+		actives = document.getElementsByClassName('blocact');
+		
+		var id = setInterval(animate, vitesse);
+		// var id2 = setInterval(neige, 1000);
+
+		 document.addEventListener('keydown', function(event) {
+            if(event.keyCode == 38)
+            {
+            	
+            	console.log('+');
+                id = setInterval(animate, vitesse);
+            }
+            if(event.keyCode == 37) // droite
+            {
+            	bloc_a_gauche(actives);
+            	console.log('<-');
+                
+            }
+            if(event.keyCode == 39) // droite
+            {
+            	bloc_a_droite(actives);
+            	console.log('->');
+                
+            }
+        });
+
+
+		function animate() {
+			
+			
+			
+			
+			if (controle_sol(actives)) {
+				
+
+				for ( i = 0; i < actives.length; i++) {
+					actives[i].setAttribute('class', 'blocsol');
+					
+				}
+				
+				actives = document.getElementsByClassName('blocact');
+				crea_bloc();
+			}
+
+
+			else {
+
+				bloc_du_bas(actives);
+
+				
+				actives = document.getElementsByClassName('blocact');
+				
+
+			}
+
+
+
+
+		}
+
+		// function neige() {
+		// 	crea_bloc();
+		// }
+
+
+	}
+
+
+
+
+
+
+
+
+
+		
+	</script>
+</html>

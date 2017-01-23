@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    
+    <style type="text/css">
+        #myCan
+    </style>
+</head>
+
+<body id="body">
+
+<canvas id="myCanvas" width="1800" height="150" style="border:1px solid black;">
+    Votre navigateur ne supporte pas canvas.
+</canvas>
+
+<div id="score">Score : 0</div>
+
+</body>
+<script type="text/javascript">
+
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+
+window.onload = function()
+{
+    var canvas = document.getElementById("myCanvas");
+    if(!canvas)
+    {
+        alert("Impossible de récupérer le canvas");
+        return;
+    }
+    
+    var context = canvas.getContext("2d");
+    if(!context)
+    {
+        alert("Impossible de récupérer le context");
+        return;
+    }
+        
+    var diametreBalle = 20;
+    
+    var posX = 1+diametreBalle/2;
+    var posY = 150-diametreBalle/2;
+    var piegeY = getRandomInt(70,150-diametreBalle/2);
+    var piegeX = getRandomInt(750,1500);
+    var vitesseX = 5;
+    var vitesseY =0;
+    var victoire = 0;
+    var score=0;
+    
+    var myInterval = setInterval(animate, 1000);
+    
+    document.addEventListener('keydown', function(event) {
+            if((event.keyCode == 32 || event.keyCode == 38) && posY == 150-diametreBalle/2)
+            {
+                posY = 150-(diametreBalle/2)+1;
+                console.log('saut') 
+                vitesseY = -7;
+            }
+            if (event.keyCode == 37) {
+                vitesseX -= 1;
+            }
+            if (event.keyCode == 39) {
+                vitesseX += 1;
+            }
+        });
+
+    function animate()
+    {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        //Tracé de la balle  
+        context.beginPath();
+        context.arc(posX, posY, diametreBalle/2, 0, Math.PI*2);
+        context.arc(piegeX, piegeY, diametreBalle/4, 0, Math.PI*2);
+        context.fill();
+
+        //On va vérifier si la balle à toucher l'un des bords du canvas.  
+        if(posX+diametreBalle/2 >= canvas.width)//Si on touche le bord gauche ou droit
+        {
+            if (victoire == 0) {
+                document.getElementById('body').innerHTML = "Défaite !! Score : "+score+" ! Recharger pour rejouer.";
+            } else {
+
+            posX = 0;//On inverse la vitesse de déplacement sur l'axe horizontal.
+            vitesseX *= 1.05;
+
+            piegeY=getRandomInt(70,150-diametreBalle/2);
+            piegeX=getRandomInt(750,1500);
+            
+            victoire = 0;
+        }
+
+        }
+
+        if (Math.abs(piegeX-posX) < (diametreBalle/2+diametreBalle/4) && Math.abs(piegeY-posY) < (diametreBalle/2+diametreBalle/4)) {
+            piegeX = -50;
+            piegeY = -50;
+            victoire = 1;
+            score ++;
+            document.getElementById('score').innerHTML = "Score : "+score;
+        }
+
+
+//
+        if(posY >= 150)
+        {
+            posY = 150-diametreBalle/2;
+            vitesseY = 0;
+        }
+
+        
+
+
+        if(posY < 70)
+        {
+            vitesseY *= -1;
+        }
+
+       
+        
+        //On additionne les vitesses de déplacement avec les positions
+        posX += vitesseX;
+        posY += vitesseY;
+        if (vitesseY < 0) {
+            vitesseY /= 1.1; 
+        } else if (vitesseY > -1) {
+            vitesseY *= 1.1; 
+        }
+    }
+    
+}
+
+</script>
+
+
+</html>

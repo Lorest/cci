@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Serg.io</title>
+	<style type="text/css">
+		#bloc {
+			width: 60px;
+			height: 60px;
+			background-color: black;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: 2;
+		}
+		#fond {
+			width: 860px;
+			height: 860px;
+			background-color: grey;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: 1;
+		}
+		#canon {
+			width: 20px;
+			height: 20px;
+			background-color: black;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: 2;
+		}
+
+		#balle {
+			width: 10px;
+			height: 10px;
+			background-color: black;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: 2;
+			border-radius: 20px;
+		}
+
+	</style>
+</head>
+<body>
+ <div id="canon"></div>
+ <div id="bloc"></div>
+ <div id='fond'></div>
+ <div id='balle'></div>
+</body>
+<script type="text/javascript">
+	var bloc = document.getElementById('bloc');
+	var canon = document.getElementById('canon');
+	var balle = document.getElementById('balle');
+	var orientation_du_canon;
+	var trajectoire;
+	var gauche = 60;
+	var haut = 60;
+	var speed = 20;
+	bloc.style.top =  haut+"px";
+	bloc.style.left = gauche+"px";
+	canon.style.left =  gauche-20+"px";
+	canon.style.top = haut+20+"px";
+
+	document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 37 && gauche > 20) {
+        gauche-=20;
+        bloc.style.left = gauche+"px";
+        canon.style.left =  gauche-20+"px";
+        canon.style.top = haut+20+"px";
+        orientation_du_canon = "g";
+        console.log('gauche');
+
+    }
+    else if(event.keyCode == 39 && gauche < 780) {
+        gauche+=20;
+        bloc.style.left = gauche+"px";
+        canon.style.left =  gauche+60+"px";
+        canon.style.top = haut+20+"px";
+        orientation_du_canon = "d";
+        console.log('droite');
+    }
+     else if(event.keyCode == 40 && haut < 780) {
+        haut+=20;
+        bloc.style.top = haut+"px";
+        canon.style.left =  gauche+20+"px";
+        canon.style.top = haut+60+"px";
+        orientation_du_canon = "b";
+        console.log('bas');
+    }
+    else if(event.keyCode == 38 && haut > 20) {
+        haut-=20;
+        
+        bloc.style.top = haut+"px";
+        canon.style.left =  gauche+20+"px";
+        canon.style.top = haut-20+"px";
+        orientation_du_canon = "h";
+        console.log('haut');
+    }
+
+    else if(event.keyCode == 32) {
+        balle.style.left = canon.style.left;
+        balle.style.top = canon.style.top;
+
+        if (orientation_du_canon == "h") {
+        	trajectoire = haut-20;
+        	while ( trajectoire > 0 ) {
+        		 trajectoire -= 1;
+        		 balle.style.top = trajectoire+"px";
+        		 console.log('tir haut');
+        	}
+        	console.log('tir haut');
+        	trajectoire = 0;
+        }
+        else if (orientation_du_canon == "b") {
+        	trajectoire = haut+60;
+        	while ( trajectoire < 850 ) {
+        		 trajectoire += 1;
+        		 balle.style.top = trajectoire+"px";
+        		 console.log('tir bas');
+
+        	}
+        	console.log('tir bas');
+        	trajectoire = 0;
+        }
+        else  if (orientation_du_canon == "d") {
+        	trajectoire = gauche+60;
+        	while ( trajectoire < 850 ) {
+        		  trajectoire += 1;
+        		 balle.style.left = trajectoire+"px";
+
+        		 console.log('tir droite');
+        	}
+        	console.log('tir droite');
+        	trajectoire = 0;
+        } 
+        else if (orientation_du_canon == "g") {
+        	trajectoire = gauche-20;
+        	while ( trajectoire > 0 ) {
+        		 trajectoire -= 1;
+        		 balle.style.left = trajectoire+"px";
+        		 console.log('tir gauche');
+        	} 
+        	console.log('tir gauche');
+        	trajectoire = 0;
+        }
+
+    }
+
+
+});
+
+</script>
+</html>

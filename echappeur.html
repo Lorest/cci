@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script>
+	function echappeur(chaine) {
+		var tab = chaine.split('');
+		console.log(tab);
+		var test = new RegExp("\"|\'")
+		for (i = 0; i < tab.length; i++ ) {
+			if (tab[i].match(test)) {
+				tab[i]="\\"+tab[i];
+			}
+		}
+
+		return tab.join('');
+
+	}
+	console.log(echappeur(prompt()));
+	
+
+</script>
+
+</body>
+</html>
+
+
